@@ -11,9 +11,7 @@
   "scripts": {
   },
   "dependencies": {
-    "loader-utils": "~0.2.11"
-  },
-  "devDependencies": {
+    "loader-utils": "~0.2.11",
     "cson": "4.0.0"
   },
   "repository": {

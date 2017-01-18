@@ -1,0 +1,52 @@
+{
+  "name": "cson-sass-vars-loader",
+  "version": "0.1.0",
+  "author": {
+    "name": "David Hezlep @dhezl"
+  },
+  "description": "CSON to SASS loader module for webpack",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+  },
+  "dependencies": {
+    "loader-utils": "~0.2.11"
+  },
+  "devDependencies": {
+    "cson": "4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhezl/cson-sass-vars-loader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dhezl/cson-sass-vars-loader.git/issues"
+  },
+  "gitHead": "1706efd68d67627876f8c0803bbcb201a23737a7",
+  "homepage": "https://github.com/dhezl/cson-sass-vars-loader.git#readme",
+  "_id": "cson-sass-vars-loader@0.1.0",
+  "_shasum": "ea1fadef2ecdd6ea32cde28c485dca28fd916992",
+  "_from": "cson-sass-vars-loader@latest",
+  "_npmVersion": "3.8.2",
+  "_nodeVersion": "4.4.0",
+  "_npmUser": {
+    "name": "dhezl"
+  },
+  "dist": {
+    "shasum": "ea1fadef2ecdd6ea32cde28c485dca28fd916992",
+    "tarball": "https://registry.npmjs.org/cson-sass-vars-loader/-/cson-sass-vars-loader-0.1.9.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "dhezl"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/cson-sass-vars-loader-0.1.9.tgz_1473907981851_0.9283234504982829"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/cson-sass-vars-loader/-/cson-sass-vars-loader-0.1.9.tgz",
+  "readme": "ERROR: No README data found!"
+}

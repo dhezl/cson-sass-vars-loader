@@ -1,6 +1,6 @@
 "use strict";
 
-const loaderUtils = require("loader-utils");
+const loader_utils = require("loader-utils");
 const fs = require('fs');
 const path = require("path");
 const CSON = require('cson');
@@ -13,10 +13,16 @@ const CSON = require('cson');
  */
 module.exports = function (content) {
 
-	var request_parameters = loaderUtils.parseQuery(this.query);
+	this.cacheable();
+	this.addDependency(cson_file_path);
+
+
+	var request_parameters = loader_utils.parseQuery(this.query);
+
+	var cson_file_path = strip_quotes(path.resolve(JSON.stringify(request_parameters.path)));
 
 	var compiled_variable_data = (function(){
-		var path_variables = collect_variables_from_file(request_parameters.path);
+		var path_variables = collect_variables_from_file(cson_file_path);
 		var data_variables = request_parameters.data;
 		return Object.assign(path_variables, data_variables);
 	})();
@@ -35,13 +41,12 @@ module.exports = function (content) {
 
 
 	/**
-	 * [collect_variables_from_file description]
-	 * @param  {[type]} query_parameter [description]
-	 * @return {[type]}                 [description]
+	 * Parses CSON data from file.
+	 * @param  {String} file_path 		The path to the external CSON file.
+	 * @return {Object}                 Javascript data object.
 	 */
-	function collect_variables_from_file (query_parameter) {
-		var cson_file_path = strip_quotes(path.resolve(JSON.stringify(query_parameter)));
-		var cson_data = CSON.parse(fs.readFileSync(cson_file_path, 'utf8'));
+	function collect_variables_from_file (file_path) {
+		var cson_data = CSON.parse(fs.readFileSync(file_path, 'utf8'));
 		return cson_data
 	}
 
@@ -49,9 +54,9 @@ module.exports = function (content) {
 	/**
 	 * Renders JavaScript object into usable SASS variables.
 	 * This routine is essentially unchanged from the original loader: jsontosass-loader
-	 * @param  {[type]} obj    [description]
-	 * @param  {[type]} indent [description]
-	 * @return {[type]}        [description]
+	 * @param  {Object} data    Javascript object containing SASS variable information.
+	 * @param  {[type]} indent Spacing argument for JSON.stringify
+	 * @return {Object}        SASS variables
 	 */
 	function render_sass (data, indent) {
 

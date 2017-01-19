@@ -5,6 +5,10 @@ Loads CSON as SASS variables for Webpack. This was forked from EdwardIrby's [jso
 
 It, in turn, was inspired by [jsonToSassVars](https://gist.github.com/Kasu/ea4f4861a81e626ea308) and [prepend-loader](https://gist.github.com/Kasu/29452051023ff5337bd7)
 
+**Update 0.1.2**
+- Made cacheable
+- Marked path dependency
+
 ## Installation
 
 `npm install cson-sass-vars-loader --save-dev`
@@ -37,13 +41,14 @@ var webpackConfig = {
 
 **Input [YourVars.cson file]**
 ``` cson
-
+# Breakpoint settings
 breakpoints:
     portraitS: "320px"
     portraitM: "360px"
     portraitL: "414px"
 
-  localNavHeight:"50px"
+# Navigation
+localNavHeight:"50px"
 
 ```
 

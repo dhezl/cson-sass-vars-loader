@@ -38,6 +38,8 @@ var webpackConfig = {
 }
 
 ```
+### Creating Breakpoints
+You can create breakpoints by passing an array into a key. The array must contain objects with the following keys: direction ('min' or 'max'), size (#px), and value (value for the variable).
 
 **Input [YourVars.cson file]**
 ``` cson

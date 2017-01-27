@@ -63,7 +63,17 @@ module.exports = function (content) {
 		// Make object root properties into sass variables
 		var sass = "";
 		for (var key in data) {
-			sass += "$" + key + ":" + JSON.stringify(data[key], null, indent) + ";\n";
+			if ( typeof key === "Array" ) {
+				key.forEach(function(breakpoint) {
+					if ( breakpoint.direction && breakpoint.size && breakpoint.value ) {
+					sass += "@media (" + breakpoint.direction + "-width: " + breakpoint.size + ") { $" + key + ":" + breakpoint.value + "; }\n"
+					} else {
+					  throw new Error("Direction, size, and value are required for adding breakpoints.");
+					}
+				});
+			} else {
+				sass += "$" + key + ":" + JSON.stringify(data[key], null, indent) + ";\n";
+			}
 		}
 
 		if (!sass) {

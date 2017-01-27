@@ -63,8 +63,11 @@ module.exports = function (content) {
 		// Make object root properties into sass variables
 		var sass = "";
 		for (var key in data) {
+			if ( typeof key === "object" ) {
+				console.log('FOO');
+			}
 			if ( typeof key === "Array" ) {
-				sass += create_breakpoints_from_array(key, data[key]);
+				// sass += create_breakpoints_from_array(key, data[key]);
 			} else {
 				sass += "$" + key + ":" + JSON.stringify(data[key], null, indent) + ";\n";
 			}

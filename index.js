@@ -64,13 +64,7 @@ module.exports = function (content) {
 		var sass = "";
 		for (var key in data) {
 			if ( typeof key === "Array" ) {
-				key.forEach(function(breakpoint) {
-					if ( breakpoint.direction && breakpoint.size && breakpoint.value ) {
-					sass += "@media (" + breakpoint.direction + "-width: " + breakpoint.size + ") { $" + key + ":" + breakpoint.value + "; }\n"
-					} else {
-					  throw new Error("Direction, size, and value are required for adding breakpoints.");
-					}
-				});
+				sass += create_breakpoints_from_array(key, data[key]);
 			} else {
 				sass += "$" + key + ":" + JSON.stringify(data[key], null, indent) + ";\n";
 			}
@@ -100,7 +94,21 @@ module.exports = function (content) {
 		return sass;
 	}
 
-
+	/**
+	 * Renders JavaScript object array into usable SASS media queries.
+	 * @param  {String} key    Key to use for variable definition
+	 * @param  {Array} data    Values to set within media query
+	 * @return {String}        Finalized media query.
+	 */
+	function create_breakpoints_from_array(key, data) {
+		data.forEach(function(breakpoint) {
+			if ( breakpoint.direction && breakpoint.size && breakpoint.value ) {
+				return "@media (" + breakpoint.direction + "-width: " + breakpoint.size + ") { $" + key + ":" + breakpoint.value + "; }\n"
+			} else {
+				throw new Error("Direction, size, and value are required for adding breakpoints.");
+			}
+		});
+	}
 
 	return sass ? sass + '\n' + content : content;
 }

@@ -29,6 +29,10 @@ module.exports = function (content) {
 
 	var sass = render_sass(compiled_variable_data);
 
+	var errors = {
+		malformed_breakpoint: "Direction, size, and value are required for adding breakpoints.",
+	}
+
 
 	/**
 	 * Not much here. Just a quick way to strip quotes from a string.
@@ -61,13 +65,19 @@ module.exports = function (content) {
 	function render_sass (data, indent) {
 
 		// Make object root properties into sass variables
-		var sass = "";
+		var sass = '';
+		var responsive_sass = '';
+
 		for (var key in data) {
-			sass += "$" + key + ":" + JSON.stringify(data[key], null, indent) + ";\n";
+			if ( typeof data[key] === "object" && data[key].breakpoints ) {
+				responsive_sass += render_responsive_variable(key, data);
+			} else {
+				sass += `$${key}: ${JSON.stringify(data[key], null, indent)};\n`;
+			}
 		}
 
-		if (!sass) {
-			return sass
+		if (!sass && !responsive_sass) {
+			return ''
 		}
 
 		// Store string values (so they remain unaffected)
@@ -86,10 +96,31 @@ module.exports = function (content) {
 			string.value = strip_quotes(string.value);
 			sass = sass.replace(string.id, string.value);
 		});
-
-		return sass;
+		return sass + responsive_sass;
 	}
 
+
+	/**
+	 * Renders JavaScript object array into usable SASS media queries.
+	 * @param  {String} key    Key to use for variable definition
+	 * @param  {Array} data    Values to set within media query
+	 * @return {String}        Finalized media query.
+	 */
+	function render_responsive_variable(key, data) {
+		var return_string = `$${key}:${JSON.stringify(data[key].default)};\n`;
+		data[key].breakpoints.forEach(function(breakpoint) {
+			var size = breakpoint.size;
+			var direction = breakpoint.direction;
+			var value = breakpoint.value;
+			if (size && direction && value) {
+				return_string += `@media (${direction}-width: ${size}) {$${key}: ${value}; }\n`;
+			} else {
+				throw new Error(errors.malformed_breakpoint);
+			}
+		})
+		delete data[key];
+		return return_string;
+	}
 
 
 	return sass ? sass + '\n' + content : content;

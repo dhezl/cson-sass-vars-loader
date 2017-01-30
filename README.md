@@ -38,6 +38,8 @@ var webpackConfig = {
 }
 
 ```
+### Creating Breakpoints
+You can create breakpoints with a breakpoints array. A default value is required and the array must contain objects with the following keys: direction ('min' or 'max'), size (#px), and value (value for the variable).
 
 **Input [YourVars.cson file]**
 ``` cson
@@ -48,7 +50,23 @@ breakpoints:
     portraitL: "414px"
 
 # Navigation
-localNavHeight:"50px"
+nav_height:"50px"
+
+# Section Padding
+vertical_padding:
+	default: "10px"
+	breakpoints: [
+		{
+			direction: "min"
+			size: "map-get($breakpoints, $portraitM)"
+			value: "20px"
+		}
+		{
+			direction: "min"
+			size: "map-get($breakpoints, $portraitL)"
+			value: "40px"
+		}
+	]
 
 ```
 
@@ -56,6 +74,9 @@ localNavHeight:"50px"
 ``` scss
 $breakpoints:(portraitS:320px,portraitM:360px,portraitL:414px);
 $localNavHeight:50px;
+$vertical_padding:10px;
+@media (min-width: 360px) {$vertical_padding: map-get($breakpoints, $portraitM);}
+@media (min-width: 414px) {$vertical_padding: map-get($breakpoints, $portraitL);}
 ```
 
 

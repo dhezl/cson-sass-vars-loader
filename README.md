@@ -75,8 +75,8 @@ vertical_padding:
 $breakpoints:(portraitS:320px,portraitM:360px,portraitL:414px);
 $localNavHeight:50px;
 $vertical_padding:10px;
-@media (min-width: 360px) {$vertical_padding: 20px;}
-@media (min-width: 414px) {$vertical_padding: 40px;}
+@media (min-width: 360px) {$vertical_padding: map-get($breakpoints, $portraitM);}
+@media (min-width: 414px) {$vertical_padding: map-get($breakpoints, $portraitL);}
 ```
 
 

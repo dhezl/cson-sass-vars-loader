@@ -29,6 +29,10 @@ module.exports = function (content) {
 
 	var sass = render_sass(compiled_variable_data);
 
+	var errors = {
+		malformed_breakpoint: "Direction, size, and value are required for adding breakpoints.",
+	}
+
 
 	/**
 	 * Not much here. Just a quick way to strip quotes from a string.
@@ -61,20 +65,19 @@ module.exports = function (content) {
 	function render_sass (data, indent) {
 
 		// Make object root properties into sass variables
-		var sass = "";
+		var sass = '';
+		var responsive_sass = '';
+
 		for (var key in data) {
-			if ( typeof key === "object" ) {
-				console.log('FOO');
-			}
-			if ( typeof key === "Array" ) {
-				// sass += create_breakpoints_from_array(key, data[key]);
+			if ( typeof data[key] === "object" && data[key].breakpoints ) {
+				responsive_sass += render_responsive_variable(key, data);
 			} else {
-				sass += "$" + key + ":" + JSON.stringify(data[key], null, indent) + ";\n";
+				sass += `$${key}: ${JSON.stringify(data[key], null, indent)};\n`;
 			}
 		}
 
-		if (!sass) {
-			return sass
+		if (!sass && !responsive_sass) {
+			return ''
 		}
 
 		// Store string values (so they remain unaffected)
@@ -93,9 +96,9 @@ module.exports = function (content) {
 			string.value = strip_quotes(string.value);
 			sass = sass.replace(string.id, string.value);
 		});
-
-		return sass;
+		return sass + responsive_sass;
 	}
+
 
 	/**
 	 * Renders JavaScript object array into usable SASS media queries.
@@ -103,15 +106,22 @@ module.exports = function (content) {
 	 * @param  {Array} data    Values to set within media query
 	 * @return {String}        Finalized media query.
 	 */
-	function create_breakpoints_from_array(key, data) {
-		data.forEach(function(breakpoint) {
-			if ( breakpoint.direction && breakpoint.size && breakpoint.value ) {
-				return "@media (" + breakpoint.direction + "-width: " + breakpoint.size + ") { $" + key + ":" + breakpoint.value + "; }\n"
+	function render_responsive_variable(key, data) {
+		var return_string = `$${key}:${JSON.stringify(data[key].default)};\n`;
+		data[key].breakpoints.forEach(function(breakpoint) {
+			var size = breakpoint.size;
+			var direction = breakpoint.direction;
+			var value = breakpoint.value;
+			if (size && direction && value) {
+				return_string += `@media (${direction}-width: ${size}) {$${key}: ${value}; }\n`;
 			} else {
-				throw new Error("Direction, size, and value are required for adding breakpoints.");
+				throw new Error(errors.malformed_breakpoint);
 			}
-		});
+		})
+		delete data[key];
+		return return_string;
 	}
+
 
 	return sass ? sass + '\n' + content : content;
 }

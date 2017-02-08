@@ -14,7 +14,6 @@ const CSON = require('cson');
 module.exports = function (content) {
 
 	this.cacheable();
-	this.addDependency(cson_file_path);
 
 
 	var request_parameters = loader_utils.parseQuery(this.query);

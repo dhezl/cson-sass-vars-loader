@@ -18,12 +18,18 @@ module.exports = function (content) {
 
 	var request_parameters = loader_utils.parseQuery(this.query);
 
-	var cson_file_path = strip_quotes(path.resolve(JSON.stringify(request_parameters.path)));
-
 	var compiled_variable_data = (function(){
-		var path_variables = collect_variables_from_file(cson_file_path);
-		var data_variables = request_parameters.data;
-		return Object.assign(path_variables, data_variables);
+		var sass_vars = {}
+		if (request_parameters.path) {
+			var cson_file_path = strip_quotes(path.resolve(JSON.stringify(request_parameters.path)));
+			var path_variables = collect_variables_from_file(cson_file_path);
+			Object.assign(sass_vars, path_variables);
+		}
+		if (request_parameters.data) {
+			var data_variables = JSON.parse(decodeURIComponent(request_parameters.data));
+			Object.assign(sass_vars, data_variables);
+		}
+		return sass_vars
 	})();
 
 	var sass = render_sass(compiled_variable_data);

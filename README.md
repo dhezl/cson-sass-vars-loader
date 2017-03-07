@@ -5,8 +5,8 @@ Loads CSON as SASS variables for Webpack. This was forked from EdwardIrby's [jso
 
 It, in turn, was inspired by [jsonToSassVars](https://gist.github.com/Kasu/ea4f4861a81e626ea308) and [prepend-loader](https://gist.github.com/Kasu/29452051023ff5337bd7)
 
-**Update 0.1.3**
-- Removed dependency that was causing issue with webpack watch.
+**Update 0.1.5**
+- Resolved an issue with loading using the `data` parameter.
 
 ## Installation
 
@@ -20,7 +20,7 @@ Two request parameters are allowed by this loader:
 
 
 - `path`: A path to a CSON file containing SASS variable data.
-- `data`: A JavaScript object containing SASS variable data.
+- `data`: A JSON object containing SASS variable data (must be URI encoded).
 
 If both of these parameters are passed into the loader, then `data` will be used as override values for any duplicate keys within the `path` data.
 
@@ -28,10 +28,11 @@ If both of these parameters are passed into the loader, then `data` will be used
 
 ``` javascript
 var sassVars = 'path/to/your/vars.cson';
+var dataVars = encodeURIComponent(JSON.stringify(myObject));
 var webpackConfig = {
     module: {
         loaders:[
-            {test: /.scss$/, loader: "style!css!sass!cson-sass-vars?path="+ sassVars}
+            {test: /.scss$/, loader: `style!css!sass!cson-sass-vars?path=${sassVars}&data=${dataVars}`}
         ]
     },
 }

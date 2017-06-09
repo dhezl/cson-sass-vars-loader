@@ -18,7 +18,7 @@ module.exports = function (content) {
 
 	var request_parameters = loader_utils.parseQuery(this.query);
 
-	var compiled_variable_data = (function(){
+  var compiled_variable_data = (function(){
 		var sass_vars = {}
 		if (request_parameters.path) {
 			var cson_file_path = strip_quotes(path.resolve(JSON.stringify(request_parameters.path)));
@@ -26,7 +26,7 @@ module.exports = function (content) {
 			Object.assign(sass_vars, path_variables);
 		}
 		if (request_parameters.data) {
-			var data_variables = JSON.parse(decodeURIComponent(request_parameters.data));
+			var data_variables = JSON.parse(request_parameters.data);
 			Object.assign(sass_vars, data_variables);
 		}
 		return sass_vars
